@@ -44,10 +44,10 @@ jobs:
         id: cache-downloads
         with:
           path: ${{ env.CACHED_DOWNLOADS }}
-          key: ${{ runner.os }}-${{ steps.postgis-ver.outputs.pgis_bundle_url }} }}
+          key: ${{ runner.os }}-${{ steps.postgis-ver.outputs.pgis_bundle_url }}
 
       - name: Download Postgis
-        if: steps.cache-primes.outputs.cache-hit != 'true'
+        if: steps.postgis-ver.outputs.cache-hit != 'true'
         env:
           PGIS_BUNDLE: ${{ steps.postgis-ver.outputs.pgis_bundle }}
           PGIS_BUNDLE_URL: ${{ steps.postgis-ver.outputs.pgis_bundle_url }}
