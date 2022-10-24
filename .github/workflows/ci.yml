@@ -25,11 +25,20 @@ jobs:
       - name: Testing 1
         run: |
           $env:Path = "$env:PGBIN;" + $env:Path
-
-          echo "--------------------------------- env..."
-          # dir env:
           
-          echo "--------------------------------- $env:PGBIN ..."
+          $postgis_url = "https://download.osgeo.org/postgis/windows/pg14/postgis-bundle-pg14x64-setup-3.3.1-1.exe"
+          $postgis_msi = "postgis-install.exe"
+          Invoke-WebRequest -Uri $postgis_url -OutFile $postgis_msi
+          
+          $postgis_log = "install.log"
+          $procMain = Start-Process "msiexec" "/i `"$postgis_msi`" /qn /l*! `"$postgis_log`"" -NoNewWindow -PassThru
+          $procLog = Start-Process "powershell" "Get-Content -Path `"$postgis_log`" -Wait" -NoNewWindow -PassThru
+          $procMain.WaitForExit()
+          $procLog.Kill()
+          
+          # echo "--------------------------------- env..."
+          # dir env:
+          # echo "--------------------------------- $env:PGBIN ..."
           # dir "$env:PGBIN"
 
           echo "--------------------------------- status..."
