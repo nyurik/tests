@@ -29,16 +29,15 @@ jobs:
           $PG_VERSION = Split-Path $env:PGROOT -Leaf
           $postgis_page = "https://download.osgeo.org/postgis/windows/pg$PG_VERSION"
           echo "Detecting PostGIS version from $postgis_page for PostgreSQL $PG_VERSION"
-          $pattern = "^postgis.*zip$"
-          $pgis_bundle = (Invoke-WebRequest -Uri $postgis_page -ErrorAction Stop).Links.Where({$_.href -match $pattern}).href
+          $pgis_bundle = (Invoke-WebRequest -Uri $postgis_page -ErrorAction Stop).Links.Where({$_.href -match "^postgis.*zip$"}).href
           if (!$pgis_bundle) {
-            Write-Error "Could not find latest PostGIS version in $postgis_page that would match '$pattern'"
+            Write-Error "Could not find latest PostGIS version in $postgis_page that would match  ^postgis.*zip$  pattern"
             exit 1
           }
           $pgis_bundle = [IO.Path]::ChangeExtension($pgis_bundle, [NullString]::Value)          
           $pgis_bundle_url = "$postgis_page/$pgis_bundle.zip"
-          echo "::set-output pgis_bundle=$pgis_bundle"
-          echo "::set-output pgis_bundle_url=$pgis_bundle_url"
+          Add-Content $env:GITHUB_OUTPUT "pgis_bundle=$pgis_bundle"
+          Add-Content $env:GITHUB_OUTPUT "pgis_bundle_url=$pgis_bundle_url"
 
       - uses: actions/cache@v3
         id: cache-downloads
