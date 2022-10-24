@@ -31,12 +31,24 @@ jobs:
           echo "downloading ..."
           Invoke-WebRequest $postgis_url -OutFile $postgis_msi
           dir $postgis_msi
-          
-          $postgis_log = "install.log"
-          $procMain = Start-Process "msiexec" "/i `"$postgis_msi`" /qn /l*! `"$postgis_log`"" -NoNewWindow -PassThru
-          $procLog = Start-Process "powershell" "Get-Content -Path `"$postgis_log`" -Wait" -NoNewWindow -PassThru
-          $procMain.WaitForExit()
-          $procLog.Kill()
+
+          $DataStamp = get-date -Format yyyyMMddTHHmmss
+          $logFile = '{0}-{1}.log' -f $postgis_msi,$DataStamp
+          $MSIArguments = @(
+            "/i"
+            ('"{0}"' -f $postgis_msi)
+            "/qn"
+            "/norestart"
+            "/L*v"
+            $logFile
+          )
+          Start-Process "msiexec.exe" -ArgumentList $MSIArguments -Wait -NoNewWindow
+  
+  #          $postgis_log = "install.log"
+#          $procMain = Start-Process "msiexec" "/i `"$postgis_msi`" /qn /l*! `"$postgis_log`"" -NoNewWindow -PassThru
+#          $procLog = Start-Process "powershell" "Get-Content -Path `"$postgis_log`" -Wait" -NoNewWindow -PassThru
+#          $procMain.WaitForExit()
+#          $procLog.Kill()
           
           # echo "--------------------------------- env..."
           # dir env:
