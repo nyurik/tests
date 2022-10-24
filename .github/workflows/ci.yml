@@ -24,35 +24,30 @@ jobs:
     steps:
       - name: Testing 1
         run: |
-          $env:Path = "$env:PGBIN;" + $env:Path
+          $PG_VERSION = Split-Path $env:PGROOT -Leaf
+          $postgis_page = "https://download.osgeo.org/postgis/windows/pg$PG_VERSION"
           
-          $postgis_url = "https://download.osgeo.org/postgis/windows/pg14/postgis-bundle-pg14-3.3.1x64.zip"
+          echo "Detecting PostGIS version from $postgis_page for PG $PG_VERSION"
+          $pattern = "^postgis.*zip$"
+          $bundle_name = (Invoke-WebRequest -Uri $postgis_page -ErrorAction Stop).Links.Where({$_.href -match $pattern}).href
+          if ($latest -eq $null) {
+            Write-Error "Could not find latest PostGIS version in $postgis_page that would match '$pattern'"
+            exit 1
+          }
+          $bundle_name = [IO.Path]::ChangeExtension($bundle_name, [NullString]::Value)
+          
+          $postgis_url = "https://download.osgeo.org/postgis/windows/pg$PG_VERSION/$bundle_name.zip"
+          echo "Downloading $bundle_name from $postgis_url"
           $postgis_zip = "postgis.zip"
-          echo "downloading ..."
-          Invoke-WebRequest $postgis_url -OutFile $postgis_zip
+          Invoke-WebRequest $postgis_url -OutFile $postgis_zip -ErrorAction Stop
           
-          Expand-Archive $postgis_zip -DestinationPath $env:PGROOT -Verbose
-          Move-Item -Path "$env:PGROOT\postgis-bundle-pg14-3.3.1x64\*" -Destination $env:PGROOT -force
-          dir $env:PGROOT
-
-          echo "--------------------------------- status..."
+          echo "Extracting and moving $env:PGROOT\$bundle_name\* to parent"
+          Expand-Archive $postgis_zip -DestinationPath $env:PGROOT
+          Move-Item -Path "$env:PGROOT\$bundle_name\*" -Destination $env:PGROOT -force
+          
+          echo "Starting PostgreSQL and adding postgis extension"
+          $env:Path = "$env:PGBIN;" + $env:Path
           & pg_ctl restart -D "$env:PGDATA"
           & pg_isready
           & psql -v ON_ERROR_STOP=1 -c "select version();"
-          & psql -v ON_ERROR_STOP=1 -c "select extname from pg_extension;"
           & psql -v ON_ERROR_STOP=1 -c "CREATE EXTENSION postgis;"
-
-
-# pushd "$env:PGBIN"
-# & "$env:PGBIN\pg_ctl" status
-# & "$env:PGBIN\pg_ctl" restart -D "$env:PGDATA"
-# popd
-
-#      - uses: actions/checkout@v3
-#
-#      - name: Testing 2
-#        run: |
-#          echo "--------------------------------- utils..."
-#          pushd windows
-#          pg_isready
-#          psql
