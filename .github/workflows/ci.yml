@@ -22,8 +22,19 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Runs a set of commands using the runners shell
+      - uses: actions/checkout@v3
       - name: Testing!
         run: |
-          echo "testing..."
+          echo "--------------------------------- PGBIN..."
+          dir "%PGBIN%"
+
+          echo "--------------------------------- status..."
+          pushd "%PGBIN%"
+          pg_ctl.exe status
+          rem pg_ctl.exe restart -D "%PGDATA%"
+          popd
+
+          echo "--------------------------------- utils..."          
+          pushd windows
+          pg_isready
           psql
