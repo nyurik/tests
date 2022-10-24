@@ -25,15 +25,15 @@ jobs:
       - name: Testing 1
         run: |
           echo "--------------------------------- env..."
-          dir env:
+          # dir env:
           
           echo "--------------------------------- $env:PGBIN ..."
-          rem dir "$env:PGBIN"
+          # dir "$env:PGBIN"
 
           echo "--------------------------------- status..."
           pushd "$env:PGBIN"
           & "$env:PGBIN\pg_ctl" status
-          rem pg_ctl restart -D "$env:PGDATA"
+          # pg_ctl restart -D "$env:PGDATA"
           popd
 
       - uses: actions/checkout@v3
