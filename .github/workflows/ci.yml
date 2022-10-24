@@ -30,7 +30,7 @@ jobs:
           echo "Detecting PostGIS version from $postgis_page for PG $PG_VERSION"
           $pattern = "^postgis.*zip$"
           $bundle_name = (Invoke-WebRequest -Uri $postgis_page -ErrorAction Stop).Links.Where({$_.href -match $pattern}).href
-          if ($latest -eq $null) {
+          if (!$bundle_name) {
             Write-Error "Could not find latest PostGIS version in $postgis_page that would match '$pattern'"
             exit 1
           }
