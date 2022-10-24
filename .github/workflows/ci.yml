@@ -22,9 +22,11 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v3
-      - name: Testing!
+      - name: Testing 1
         run: |
+          echo "--------------------------------- env..."
+          dir env:
+          
           echo "--------------------------------- PGBIN..."
           dir "$PGBIN"
 
@@ -34,6 +36,10 @@ jobs:
           rem pg_ctl.exe restart -D "$PGDATA"
           popd
 
+      - uses: actions/checkout@v3
+
+      - name: Testing 2
+        run: |
           echo "--------------------------------- utils..."          
           pushd windows
           pg_isready
