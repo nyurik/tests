@@ -26,12 +26,12 @@ jobs:
       - name: Testing!
         run: |
           echo "--------------------------------- PGBIN..."
-          dir "%PGBIN%"
+          dir "$PGBIN"
 
           echo "--------------------------------- status..."
-          pushd "%PGBIN%"
+          pushd "$PGBIN"
           pg_ctl.exe status
-          rem pg_ctl.exe restart -D "%PGDATA%"
+          rem pg_ctl.exe restart -D "$PGDATA"
           popd
 
           echo "--------------------------------- utils..."          
