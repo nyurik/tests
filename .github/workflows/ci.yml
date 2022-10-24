@@ -44,11 +44,11 @@ jobs:
           )
           Start-Process "msiexec.exe" -ArgumentList $MSIArguments -Wait -NoNewWindow
   
-  #          $postgis_log = "install.log"
-#          $procMain = Start-Process "msiexec" "/i `"$postgis_msi`" /qn /l*! `"$postgis_log`"" -NoNewWindow -PassThru
-#          $procLog = Start-Process "powershell" "Get-Content -Path `"$postgis_log`" -Wait" -NoNewWindow -PassThru
-#          $procMain.WaitForExit()
-#          $procLog.Kill()
+          # $postgis_log = "install.log"
+          # $procMain = Start-Process "msiexec" "/i `"$postgis_msi`" /qn /l*! `"$postgis_log`"" -NoNewWindow -PassThru
+          # $procLog = Start-Process "powershell" "Get-Content -Path `"$postgis_log`" -Wait" -NoNewWindow -PassThru
+          # $procMain.WaitForExit()
+          # $procLog.Kill()
           
           # echo "--------------------------------- env..."
           # dir env:
