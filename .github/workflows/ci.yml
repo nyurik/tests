@@ -58,7 +58,7 @@ jobs:
           echo "Extracting $env:CACHED_DOWNLOADS\$env:PGIS_BUNDLE\*"
           Remove-Item $env:CACHED_DOWNLOADS -ErrorAction SilentlyContinue
           echo "Expanded $((Expand-Archive $postgis_zip -DestinationPath $env:CACHED_DOWNLOADS -PassThru).count files from $postgis_zip)"
-          echo "Moved $((Move-Item -Path "$env:CACHED_DOWNLOADS\$env:PGIS_BUNDLE\*" -Destination $env:CACHED_DOWNLOADS -force).count) files to $env:CACHED_DOWNLOADS"
+          echo "Moved $((Move-Item -Path "$env:CACHED_DOWNLOADS\$env:PGIS_BUNDLE\*" -Destination $env:CACHED_DOWNLOADS -Force -PassThru).count) files to $env:CACHED_DOWNLOADS"
           Remove-Item $postgis_zip
           if (!(Test-Path "$env:CACHED_DOWNLOADS\*")) {
             Write-Error "Could not find PostGIS files in $env:CACHED_DOWNLOADS"
@@ -71,7 +71,7 @@ jobs:
             Write-Error "Could not find PostGIS files in $env:CACHED_DOWNLOADS"
             exit 1
           }
-          echo "Copied $((Copy-Item -Path "$env:CACHED_DOWNLOADS\*" -Destination $env:PGROOT -force).count) PostGIS files to $env:PGROOT"
+          echo "Copied $((Copy-Item -Path "$env:CACHED_DOWNLOADS\*" -Destination $env:PGROOT -Force -PassThru).count) PostGIS files to $env:PGROOT"
           echo "Starting PostgreSQL and adding postgis extension"
           $env:Path = "$env:PGBIN;" + $env:Path
           & pg_ctl restart -D "$env:PGDATA"
