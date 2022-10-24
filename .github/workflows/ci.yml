@@ -57,8 +57,8 @@ jobs:
           
           echo "Extracting $env:CACHED_DOWNLOADS\$env:PGIS_BUNDLE\*"
           Remove-Item $env:CACHED_DOWNLOADS -ErrorAction SilentlyContinue
-          Expand-Archive $postgis_zip -DestinationPath $env:CACHED_DOWNLOADS
-          Move-Item -Path "$env:CACHED_DOWNLOADS\$env:PGIS_BUNDLE\*" -Destination $env:CACHED_DOWNLOADS -force
+          echo "Expanded $((Expand-Archive $postgis_zip -DestinationPath $env:CACHED_DOWNLOADS -PassThru).count files from $postgis_zip)"
+          echo "Moved $((Move-Item -Path "$env:CACHED_DOWNLOADS\$env:PGIS_BUNDLE\*" -Destination $env:CACHED_DOWNLOADS -force).count) files to $env:CACHED_DOWNLOADS"
           Remove-Item $postgis_zip
           if (!(Test-Path "$env:CACHED_DOWNLOADS\*")) {
             Write-Error "Could not find PostGIS files in $env:CACHED_DOWNLOADS"
