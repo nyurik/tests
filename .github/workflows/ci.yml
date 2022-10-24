@@ -17,13 +17,12 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: windows-latest
     env:
       CACHED_DOWNLOADS: downloads
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Decide Postgis version
+        description: "Download the list of available Postgis versions, and decide which one to use"
         id: postgis-ver
         run: |
           $PG_VERSION = Split-Path $env:PGROOT -Leaf
@@ -47,6 +46,7 @@ jobs:
 
       - name: Download Postgis
         if: steps.postgis-ver.outputs.cache-hit != 'true'
+        description: "Download Postgis bundle from ${{ steps.postgis-ver.outputs.pgis_bundle_url }} if not in cache"
         env:
           PGIS_BUNDLE: ${{ steps.postgis-ver.outputs.pgis_bundle }}
           PGIS_BUNDLE_URL: ${{ steps.postgis-ver.outputs.pgis_bundle_url }}
