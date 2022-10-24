@@ -34,16 +34,21 @@ jobs:
 
           echo "--------------------------------- status..."
           & pg_ctl restart -D "$env:PGDATA"
-          # pushd "$env:PGBIN"
-          # & "$env:PGBIN\pg_ctl" status
-          # & "$env:PGBIN\pg_ctl" restart -D "$env:PGDATA"
-          # popd
+          & pg_isready
+          & psql -c "select version();"
+          & psql -c "select extname from pg_extension;"
 
-      - uses: actions/checkout@v3
 
-      - name: Testing 2
-        run: |
-          echo "--------------------------------- utils..."          
-          pushd windows
-          pg_isready
-          psql
+# pushd "$env:PGBIN"
+# & "$env:PGBIN\pg_ctl" status
+# & "$env:PGBIN\pg_ctl" restart -D "$env:PGDATA"
+# popd
+
+#      - uses: actions/checkout@v3
+#
+#      - name: Testing 2
+#        run: |
+#          echo "--------------------------------- utils..."
+#          pushd windows
+#          pg_isready
+#          psql
