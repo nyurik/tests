@@ -27,13 +27,13 @@ jobs:
           echo "--------------------------------- env..."
           dir env:
           
-          echo "--------------------------------- PGBIN..."
-          dir "$PGBIN"
+          echo "--------------------------------- $env:PGBIN ..."
+          dir "$env:PGBIN"
 
           echo "--------------------------------- status..."
-          pushd "$PGBIN"
+          pushd "$env:PGBIN"
           pg_ctl.exe status
-          rem pg_ctl.exe restart -D "$PGDATA"
+          rem pg_ctl.exe restart -D "$env:PGDATA"
           popd
 
       - uses: actions/checkout@v3
