@@ -67,12 +67,11 @@ jobs:
           
       - name: Install Postgis
         run: |
-          echo "Starting PostgreSQL and adding postgis extension"
-          if (! Test-Path "$env:CACHED_DOWNLOADS\*") {
+          if (!(Test-Path "$env:CACHED_DOWNLOADS\*")) {
             Write-Error "Could not find PostGIS files in $env:CACHED_DOWNLOADS"
             exit 1
           }
-          Copy-Item -Path "$env:CACHED_DOWNLOADS\*" -Destination $env:PGROOT -force
+          echo "Copied $((Copy-Item -Path "$env:CACHED_DOWNLOADS\*" -Destination $env:PGROOT -force).count) PostGIS files to $env:PGROOT"
           echo "Starting PostgreSQL and adding postgis extension"
           $env:Path = "$env:PGBIN;" + $env:Path
           & pg_ctl restart -D "$env:PGDATA"
