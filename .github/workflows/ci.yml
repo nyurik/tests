@@ -32,8 +32,8 @@ jobs:
 
           echo "--------------------------------- status..."
           pushd "$env:PGBIN"
-          & "$env:PGBIN\pg_ctl" status
-          # pg_ctl restart -D "$env:PGDATA"
+          # & "$env:PGBIN\pg_ctl" status
+          & pg_ctl restart -D "$env:PGDATA"
           popd
 
       - uses: actions/checkout@v3
