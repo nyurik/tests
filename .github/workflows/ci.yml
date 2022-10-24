@@ -41,10 +41,24 @@ jobs:
           $postgis_zip = "postgis.zip"
           Invoke-WebRequest $postgis_url -OutFile $postgis_zip -ErrorAction Stop
           
-          echo "Extracting and moving $env:PGROOT\$bundle_name\* to parent"
-          Expand-Archive $postgis_zip -DestinationPath $env:PGROOT
-          Move-Item -Path "$env:PGROOT\$bundle_name\*" -Destination $env:PGROOT -force
+          $postgis_dir = "downloads"
+          echo "Extracting $postgis_dir\$bundle_name\*"
+          Remove-Item $postgis_dir -ErrorAction SilentlyContinue
+          Expand-Archive $postgis_zip -DestinationPath $postgis_dir
+          Move-Item -Path "$postgis_dir\$bundle_name\*" -Destination $postgis_dir -force
+          Remove-Item $postgis_zip
+          if (! Test-Path "$postgis_dir\*") {
+            Write-Error "Could not find PostGIS files in $postgis_dir"
+            exit 1
+          }
           
+          
+          echo "Starting PostgreSQL and adding postgis extension"
+          if (! Test-Path "$postgis_dir\*") {
+            Write-Error "Could not find PostGIS files in $postgis_dir"
+            exit 1
+          }
+          Move-Item -Path "$postgis_dir\*" -Destination $env:PGROOT -force
           echo "Starting PostgreSQL and adding postgis extension"
           $env:Path = "$env:PGBIN;" + $env:Path
           & pg_ctl restart -D "$env:PGDATA"
