@@ -33,18 +33,14 @@ jobs:
           
           Expand-Archive $postgis_zip -DestinationPath $env:PGROOT -Verbose
           Move-Item -Path "$env:PGROOT\postgis-bundle-pg14-3.3.1x64\*" -Destination $env:PGROOT -force
-
-          # echo "--------------------------------- env..."
-          # dir env:
-          # echo "--------------------------------- $env:PGBIN ..."
-          # dir "$env:PGBIN"
+          dir $env:PGROOT
 
           echo "--------------------------------- status..."
           & pg_ctl restart -D "$env:PGDATA"
           & pg_isready
-          & psql -c "select version();"
-          & psql -c "select extname from pg_extension;"
-          & psql -c "CREATE EXTENSION postgis;"
+          & psql -v ON_ERROR_STOP=1 -c "select version();"
+          & psql -v ON_ERROR_STOP=1 -c "select extname from pg_extension;"
+          & psql -v ON_ERROR_STOP=1 -c "CREATE EXTENSION postgis;"
 
 
 # pushd "$env:PGBIN"
