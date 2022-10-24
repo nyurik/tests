@@ -24,6 +24,8 @@ jobs:
     steps:
       - name: Testing 1
         run: |
+          $env:Path = "$env:PGBIN;" + $env:Path
+
           echo "--------------------------------- env..."
           # dir env:
           
@@ -31,10 +33,11 @@ jobs:
           # dir "$env:PGBIN"
 
           echo "--------------------------------- status..."
-          pushd "$env:PGBIN"
-          # & "$env:PGBIN\pg_ctl" status
           & pg_ctl restart -D "$env:PGDATA"
-          popd
+          # pushd "$env:PGBIN"
+          # & "$env:PGBIN\pg_ctl" status
+          # & "$env:PGBIN\pg_ctl" restart -D "$env:PGDATA"
+          # popd
 
       - uses: actions/checkout@v3
 
