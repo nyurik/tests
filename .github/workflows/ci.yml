@@ -43,6 +43,8 @@ jobs:
             $logFile
           )
           Start-Process "msiexec.exe" -ArgumentList $MSIArguments -Wait -NoNewWindow
+          dir $logFile
+          type $logFile
   
           # $postgis_log = "install.log"
           # $procMain = Start-Process "msiexec" "/i `"$postgis_msi`" /qn /l*! `"$postgis_log`"" -NoNewWindow -PassThru
