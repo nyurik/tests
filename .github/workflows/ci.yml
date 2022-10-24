@@ -32,7 +32,7 @@ jobs:
 
           echo "--------------------------------- status..."
           pushd "$env:PGBIN"
-          "$env:PGBIN\pg_ctl" status
+          & "$env:PGBIN\pg_ctl" status
           rem pg_ctl restart -D "$env:PGDATA"
           popd
 
