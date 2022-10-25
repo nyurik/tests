@@ -24,12 +24,13 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v3
 
-      - uses: ikalnytskyi/action-setup-postgres@v3
+      - name: Install postgres
+        uses: ikalnytskyi/action-setup-postgres@v3
         id: pg
 
       - name: bash
         env:
-          CONNECTION_URI: ${{ steps.pg.outputs.value }}
+          CONNECTION_URI: ${{ steps.pg.outputs.connection-uri }}
         run: |
           echo "CONNECTION_URI = $CONNECTION_URI"
           set -x
