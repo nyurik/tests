@@ -29,7 +29,7 @@ jobs:
 
       - name: bash
         env:
-          CONNECTION_URI: ${{ steps.pg.outputs.CONNECTION_URI }}
+          CONNECTION_URI: ${{ steps.pg.outputs.value }}
         run: |
           echo "CONNECTION_URI = $CONNECTION_URI"
           set -x
