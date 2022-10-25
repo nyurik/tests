@@ -21,6 +21,14 @@ jobs:
     env:
       CACHED_DOWNLOADS: downloads
     steps:
+      - run: |
+          # gitbash.exe	C:\Program Files\Git\bin\bash.exe
+          # msys2bash.cmd	C:\msys64\usr\bin\bash.exe
+          # wslbash.exe	C:\Windows\System32\bash.exe
+          & bash --version
+          & bash -c 'echo -e "HOME=$HOME"'
+          & bash runme.sh
+
       - name: Decide Postgis version
         description: "Download the list of available Postgis versions, and decide which one to use"
         id: postgis-ver
