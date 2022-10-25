@@ -24,6 +24,8 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v3
 
+      - run: sudo apt install -y postgis
+
       - name: Install postgres
         uses: ikalnytskyi/action-setup-postgres@v3
         id: pg
