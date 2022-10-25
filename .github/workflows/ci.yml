@@ -72,7 +72,7 @@ jobs:
           Invoke-WebRequest $env:PGIS_BUNDLE_URL -OutFile $postgis_zip -ErrorAction Stop
           
           echo "Extracting $env:CACHED_DOWNLOADS\$env:PGIS_BUNDLE\*"
-          Remove-Item $env:CACHED_DOWNLOADS -ErrorAction SilentlyContinue
+          Remove-Item $env:CACHED_DOWNLOADS -Force -ErrorAction SilentlyContinue
           echo "Expanded $((Expand-Archive $postgis_zip -DestinationPath $env:CACHED_DOWNLOADS -PassThru).count) files from $postgis_zip"
           echo "Moved $((Move-Item -Path "$env:CACHED_DOWNLOADS\$env:PGIS_BUNDLE\*" -Destination $env:CACHED_DOWNLOADS -Force -PassThru).count) files to $env:CACHED_DOWNLOADS"
           Remove-Item $postgis_zip
