@@ -72,6 +72,8 @@ jobs:
           Invoke-WebRequest $env:PGIS_BUNDLE_URL -OutFile $postgis_zip -ErrorAction Stop
           
           echo "Extracting $env:CACHED_DOWNLOADS\$env:PGIS_BUNDLE\*"
+          echo "INFO: $(Get-ItemProperty $env:CACHED_DOWNLOADS)"
+          Get-ItemProperty $env:CACHED_DOWNLOADS
           if (Test-Path $env:CACHED_DOWNLOADS) {
             Remove-Item $env:CACHED_DOWNLOADS
           }
