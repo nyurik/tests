@@ -21,6 +21,9 @@ jobs:
     env:
       CACHED_DOWNLOADS: downloads
     steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+
       - name: bash
         run: |
           # gitbash.exe	C:\Program Files\Git\bin\bash.exe
