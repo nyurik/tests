@@ -28,6 +28,8 @@ jobs:
         id: pg
 
       - name: bash
+        env:
+          CONNECTION_URI: ${{ steps.pg.outputs.CONNECTION_URI }}
         run: |
           set -x
           which pg_ctl || true
@@ -38,10 +40,10 @@ jobs:
           export PGHOST="localhost"
           export PGUSER="${USER:-${USERNAME:-postgres}}"
  
-          sudo systemctl start postgresql.service
-          pg_isready
-          psql -v ON_ERROR_STOP=1 -c "select version();"
-          psql -v ON_ERROR_STOP=1 -c "CREATE EXTENSION postgis;"
+          # sudo systemctl start postgresql.service
+          # pg_isready
+          psql -v ON_ERROR_STOP=1 -c "select version();" "$CONNECTION_URI"
+          psql -v ON_ERROR_STOP=1 -c "CREATE EXTENSION postgis;" "$CONNECTION_URI"
 
 #      - name: Decide Postgis version
 #        # Download the list of available Postgis versions, and decide which one to use
