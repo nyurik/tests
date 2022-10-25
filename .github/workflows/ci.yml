@@ -28,6 +28,9 @@ jobs:
           # wslbash.exe	C:\Windows\System32\bash.exe
           & bash --version
           & bash -c 'echo -e "HOME=$HOME"'
+          & bash -c 'ls -alh'
+          & bash -c 'pwd'
+          & bash runme2.sh
           & bash .github\workflows\runme.sh
           & bash .github/workflows/runme.sh
 
