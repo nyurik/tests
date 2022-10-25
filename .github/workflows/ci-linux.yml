@@ -26,9 +26,11 @@ jobs:
 
       - name: bash
         run: |
+          set -x
           which pg_ctl || true
           which pg_isready || true
           which psql || true
+          export | sort
 
           sudo systemctl start postgresql.service
           pg_isready
