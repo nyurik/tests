@@ -21,7 +21,8 @@ jobs:
     env:
       CACHED_DOWNLOADS: downloads
     steps:
-      - run: |
+      - name: bash
+        run: |
           # gitbash.exe	C:\Program Files\Git\bin\bash.exe
           # msys2bash.cmd	C:\msys64\usr\bin\bash.exe
           # wslbash.exe	C:\Windows\System32\bash.exe
@@ -30,7 +31,7 @@ jobs:
           & bash runme.sh
 
       - name: Decide Postgis version
-        description: "Download the list of available Postgis versions, and decide which one to use"
+        # Download the list of available Postgis versions, and decide which one to use
         id: postgis-ver
         run: |
           $PG_VERSION = Split-Path $env:PGROOT -Leaf
@@ -54,7 +55,7 @@ jobs:
 
       - name: Download Postgis
         if: steps.postgis-ver.outputs.cache-hit != 'true'
-        description: "Download Postgis bundle from ${{ steps.postgis-ver.outputs.pgis_bundle_url }} if not in cache"
+        # Download Postgis bundle if not in cache
         env:
           PGIS_BUNDLE: ${{ steps.postgis-ver.outputs.pgis_bundle }}
           PGIS_BUNDLE_URL: ${{ steps.postgis-ver.outputs.pgis_bundle_url }}
