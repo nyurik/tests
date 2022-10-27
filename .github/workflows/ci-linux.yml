@@ -40,8 +40,10 @@ jobs:
           psql -v ON_ERROR_STOP=1 -c '\l+' "$CONNECTION_URI"
           psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
 
-          pg_ctl -D /usr/local/var/postgres start
-          createuser -s postgres
+          pg_ctl -D /usr/local/var/postgres start || echo "pg_ctl failed"
+          createuser -s postgres || echo "createuser failed"
+          
+          sudo -i -u postgres psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
 
           psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
 
@@ -76,8 +78,10 @@ jobs:
           psql -v ON_ERROR_STOP=1 -c '\l+' "$CONNECTION_URI"
           psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
           
-          pg_ctl -D /usr/local/var/postgres start
-          createuser -s postgres
+          pg_ctl -D /usr/local/var/postgres start || echo "pg_ctl failed"
+          createuser -s postgres || echo "createuser failed"
+          
+          sudo -i -u postgres psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
 
           psql -v ON_ERROR_STOP=1 -c "CREATE EXTENSION postgis;" "$CONNECTION_URI"
 
