@@ -24,16 +24,28 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v3
 
+      - name: Install postgres
+        uses: ikalnytskyi/action-setup-postgres@v3
+        id: pg
+
+      - run: |
+          # start postgresql
+          brew services start postgresql
+          psql -v ON_ERROR_STOP=1 -c "select version();" "$CONNECTION_URI"
+          psql -v ON_ERROR_STOP=1 -c "SELECT current_user;" "$CONNECTION_URI"
+          psql -v ON_ERROR_STOP=1 -c "SELECT session_user;" "$CONNECTION_URI"
+          psql -v ON_ERROR_STOP=1 -c "RESET ROLE;" "$CONNECTION_URI"
+          psql -v ON_ERROR_STOP=1 -c "SELECT * FROM pg_roles;" "$CONNECTION_URI"
+          psql -v ON_ERROR_STOP=1 -c '\l+' "$CONNECTION_URI"
+        env:
+          CONNECTION_URI: ${{ steps.pg.outputs.connection-uri }}
+
       - run: |
           brew install postgis
           # sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
           # sudo apt-get update
           # sudo apt-cache search postgis
           # sudo apt install -y postgis
-
-      - name: Install postgres
-        uses: ikalnytskyi/action-setup-postgres@v3
-        id: pg
 
       - name: bash
         env:
@@ -51,6 +63,8 @@ jobs:
           psql -v ON_ERROR_STOP=1 -c "SELECT current_user;" "$CONNECTION_URI"
           psql -v ON_ERROR_STOP=1 -c "SELECT session_user;" "$CONNECTION_URI"
           psql -v ON_ERROR_STOP=1 -c "RESET ROLE;" "$CONNECTION_URI"
+          psql -v ON_ERROR_STOP=1 -c "SELECT * FROM pg_roles;" "$CONNECTION_URI"
+          psql -v ON_ERROR_STOP=1 -c '\l+' "$CONNECTION_URI"
           psql -v ON_ERROR_STOP=1 -c "CREATE EXTENSION postgis;" "$CONNECTION_URI"
 
 
