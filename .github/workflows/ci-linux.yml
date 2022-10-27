@@ -36,7 +36,15 @@ jobs:
           psql -v ON_ERROR_STOP=1 -c "SELECT session_user;" "$CONNECTION_URI"
           psql -v ON_ERROR_STOP=1 -c "RESET ROLE;" "$CONNECTION_URI"
           psql -v ON_ERROR_STOP=1 -c "SELECT * FROM pg_roles;" "$CONNECTION_URI"
+          psql -v ON_ERROR_STOP=1 -c '\l' "$CONNECTION_URI"
           psql -v ON_ERROR_STOP=1 -c '\l+' "$CONNECTION_URI"
+          psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
+
+          pg_ctl -D /usr/local/var/postgres start
+          createuser -s postgres
+
+          psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
+
         env:
           CONNECTION_URI: ${{ steps.pg.outputs.connection-uri }}
 
@@ -64,7 +72,13 @@ jobs:
           psql -v ON_ERROR_STOP=1 -c "SELECT session_user;" "$CONNECTION_URI"
           psql -v ON_ERROR_STOP=1 -c "RESET ROLE;" "$CONNECTION_URI"
           psql -v ON_ERROR_STOP=1 -c "SELECT * FROM pg_roles;" "$CONNECTION_URI"
+          psql -v ON_ERROR_STOP=1 -c '\l' "$CONNECTION_URI"
           psql -v ON_ERROR_STOP=1 -c '\l+' "$CONNECTION_URI"
+          psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
+          
+          pg_ctl -D /usr/local/var/postgres start
+          createuser -s postgres
+
           psql -v ON_ERROR_STOP=1 -c "CREATE EXTENSION postgis;" "$CONNECTION_URI"
 
 
