@@ -39,7 +39,7 @@ jobs:
         env:
           CONNECTION_URI: ${{ steps.pg.outputs.connection-uri }}
         run: |
-          echo "CONNECTION_URI = $CONNECTION_URI"
+          echo "CONNECTION_URI = $CONNECTION_URI" | base64
           set -x
           # which pg_ctl || true
           # which pg_isready || true
