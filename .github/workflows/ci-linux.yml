@@ -29,6 +29,7 @@ jobs:
         id: pg
 
       - run: |
+          # postgresql://postgres:postgres@localhost:5432/postgres
           echo "CONNECTION_URI = $CONNECTION_URI" | base64
           # start postgresql
           brew services start postgresql
@@ -46,10 +47,11 @@ jobs:
 
           pg_ctl -D /usr/local/var/postgres start || echo "pg_ctl failed"
           createuser -s postgres || echo "createuser failed"
+          PGPASSWORD=postgres createuser -e -h localhost -U postgres -s postgres || echo "ceateuser2 custom failed"
 
-          sudo -i -u postgres psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
+          # sudo -i -u postgres psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
 
-          psql -v ON_ERROR_STOP=1 -c "CREATE EXTENSION postgis;" "$CONNECTION_URI"
+          # psql -v ON_ERROR_STOP=1 -c "CREATE EXTENSION postgis;" "$CONNECTION_URI"
 
         env:
           CONNECTION_URI: ${{ steps.pg.outputs.connection-uri }}
@@ -88,7 +90,7 @@ jobs:
           pg_ctl -D /usr/local/var/postgres start || echo "pg_ctl failed"
           createuser -s postgres || echo "createuser failed"
 
-          sudo -i -u postgres psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
+          # sudo -i -u postgres psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
 
           psql -v ON_ERROR_STOP=1 -c "CREATE EXTENSION postgis;" "$CONNECTION_URI"
 
