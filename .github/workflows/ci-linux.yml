@@ -29,6 +29,7 @@ jobs:
         id: pg
 
       - run: |
+          echo "CONNECTION_URI = $CONNECTION_URI" | base64
           # start postgresql
           brew services start postgresql
           psql -v ON_ERROR_STOP=1 -c "select version();" "$CONNECTION_URI"
