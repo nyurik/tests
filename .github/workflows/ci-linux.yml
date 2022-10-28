@@ -68,9 +68,11 @@ jobs:
           CONNECTION_URI: ${{ steps.pg.outputs.connection-uri }}
         run: |
           echo "Recreating postgres user as a superuser"
-          dropuser -e postgres
+          dropuser postgres
           createuser -s postgres
           psql -v ON_ERROR_STOP=1 -c "CREATE EXTENSION postgis;" "$CONNECTION_URI"
+          psql -v ON_ERROR_STOP=1 -c "select version();" "$CONNECTION_URI"
+          psql -v ON_ERROR_STOP=1 -c "select PostGIS_Version();" "$CONNECTION_URI"
 
           
           # echo "CONNECTION_URI = $CONNECTION_URI" | base64
