@@ -17,7 +17,8 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
-    runs-on: macos-latest
+    # runs-on: macos-latest
+    runs-on: ubuntu-latest
     # env:
     #   CACHED_DOWNLOADS: downloads
     steps:
