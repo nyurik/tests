@@ -27,17 +27,19 @@ jobs:
           brew services info nginx
           nginx -t
           netstat -an | grep 80
-          lsof -i :80
-          brew services
+          # lsof -i :80
+          # brew services
           echo "----------------------------"
-          cat /usr/local/etc/nginx/nginx.conf
+          # cat /usr/local/etc/nginx/nginx.conf
           echo "----------------------------"
-          curl -I http://localhost
+          echo "foo bar" > /usr/local/var/www/me.txt
           brew services start nginx
           sleep 2
           brew services info nginx
           ls -R /usr/local/var/www
           curl -I http://localhost
+          curl -I http://localhost/me.txt
+          curl http://localhost/me.txt
           sleep 5
           sudo brew services start nginx
           sleep 1
