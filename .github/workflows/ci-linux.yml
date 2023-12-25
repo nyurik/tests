@@ -35,10 +35,13 @@ jobs:
           curl -I http://localhost
           brew services start nginx
           sleep 2
+          brew services info nginx
           ls -R /usr/local/var/www
           curl -I http://localhost
           sleep 5
           sudo brew services start nginx
+          sleep 1
+          brew services info nginx
           netstat -an
           curl -I http://localhost
           
