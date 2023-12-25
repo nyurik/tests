@@ -32,8 +32,15 @@ jobs:
           echo "----------------------------"
           cat /usr/local/etc/nginx/nginx.conf
           echo "----------------------------"
+          curl -I http://localhost
+          brew services start nginx
+          sleep 2
+          ls -R /usr/local/var/www
+          curl -I http://localhost
+          sleep 5
           sudo brew services start nginx
           netstat -an
+          curl -I http://localhost
           
       # - name: Checkout sources
       #   uses: actions/checkout@v3
