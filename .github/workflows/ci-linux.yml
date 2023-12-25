@@ -24,16 +24,16 @@ jobs:
       - run: |
           set +e
           set -x
-          ps -ef | grep nginx
           brew services info nginx
           nginx -t
           netstat -an | grep 80
           lsof -i :80
-          sudo nginx -s status
-          ls /Library/LaunchDaemons/
-          launchctl list | grep nginx
           brew services
-          test -s /var/run/nginx.pid
+          echo "----------------------------"
+          cat /usr/local/etc/nginx/nginx.conf
+          echo "----------------------------"
+          sudo brew services start nginx
+          netstat -an
           
       # - name: Checkout sources
       #   uses: actions/checkout@v3
