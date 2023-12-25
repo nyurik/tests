@@ -18,15 +18,29 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     runs-on: macos-latest
-    env:
-      CACHED_DOWNLOADS: downloads
+    # env:
+    #   CACHED_DOWNLOADS: downloads
     steps:
-      - name: Checkout sources
-        uses: actions/checkout@v3
+      - run: |
+          set +e
+          set -x
+          ps -ef | grep nginx
+          brew services info nginx
+          nginx -t
+          netstat -an | grep 80
+          lsof -i :80
+          sudo nginx -s status
+          ls /Library/LaunchDaemons/
+          launchctl list | grep nginx
+          brew services
+          test -s /var/run/nginx.pid
+          
+      # - name: Checkout sources
+      #   uses: actions/checkout@v3
 
-      - name: Install postgres
-        uses: ikalnytskyi/action-setup-postgres@v3
-        id: pg
+      # - name: Install postgres
+      #   uses: ikalnytskyi/action-setup-postgres@v3
+      #   id: pg
 
 #      - run: |
 #          # postgresql://postgres:postgres@localhost:5432/postgres
@@ -56,44 +70,44 @@ jobs:
 #        env:
 #          CONNECTION_URI: ${{ steps.pg.outputs.connection-uri }}
 
-      - run: |
-          brew install postgis
-          # sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
-          # sudo apt-get update
-          # sudo apt-cache search postgis
-          # sudo apt install -y postgis
+      # - run: |
+      #     brew install postgis
+      #     # sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
+      #     # sudo apt-get update
+      #     # sudo apt-cache search postgis
+      #     # sudo apt install -y postgis
 
-      - name: bash
-        env:
-          CONNECTION_URI: ${{ steps.pg.outputs.connection-uri }}
-        run: |
-          echo "Recreating postgres user as a superuser"
-          dropuser postgres
-          createuser -s postgres
-          psql -v ON_ERROR_STOP=1 -c "CREATE EXTENSION postgis;" "$CONNECTION_URI"
-          psql -v ON_ERROR_STOP=1 -c "select version();" "$CONNECTION_URI"
-          psql -v ON_ERROR_STOP=1 -c "select PostGIS_Version();" "$CONNECTION_URI"
+      # - name: bash
+      #   env:
+      #     CONNECTION_URI: ${{ steps.pg.outputs.connection-uri }}
+      #   run: |
+      #     echo "Recreating postgres user as a superuser"
+      #     dropuser postgres
+      #     createuser -s postgres
+      #     psql -v ON_ERROR_STOP=1 -c "CREATE EXTENSION postgis;" "$CONNECTION_URI"
+      #     psql -v ON_ERROR_STOP=1 -c "select version();" "$CONNECTION_URI"
+      #     psql -v ON_ERROR_STOP=1 -c "select PostGIS_Version();" "$CONNECTION_URI"
 
           
-          # echo "CONNECTION_URI = $CONNECTION_URI" | base64
-          # set -x
-          # which pg_ctl || true
-          # which pg_isready || true
-          # which psql || true
-          # export | sort
-          # sudo systemctl start postgresql.service
-          # pg_isready
-          # psql -v ON_ERROR_STOP=1 -c "select version();" "$CONNECTION_URI"
-          # psql -v ON_ERROR_STOP=1 -c "SELECT current_user;" "$CONNECTION_URI"
-          # psql -v ON_ERROR_STOP=1 -c "SELECT session_user;" "$CONNECTION_URI"
-          # psql -v ON_ERROR_STOP=1 -c "RESET ROLE;" "$CONNECTION_URI"
-          # psql -v ON_ERROR_STOP=1 -c "SELECT * FROM pg_roles;" "$CONNECTION_URI"
-          # psql -v ON_ERROR_STOP=1 -c '\l' "$CONNECTION_URI"
-          # psql -v ON_ERROR_STOP=1 -c '\l+' "$CONNECTION_URI"
-          # psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
-          # PGPASSWORD=postgres dropuser -e -h localhost -U postgres postgres || echo "2dropuser custom failed"
-          # pg_ctl -D /usr/local/var/postgres start || echo "2pg_ctl failed"
-          # sudo -i -u postgres psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
+      #     # echo "CONNECTION_URI = $CONNECTION_URI" | base64
+      #     # set -x
+      #     # which pg_ctl || true
+      #     # which pg_isready || true
+      #     # which psql || true
+      #     # export | sort
+      #     # sudo systemctl start postgresql.service
+      #     # pg_isready
+      #     # psql -v ON_ERROR_STOP=1 -c "select version();" "$CONNECTION_URI"
+      #     # psql -v ON_ERROR_STOP=1 -c "SELECT current_user;" "$CONNECTION_URI"
+      #     # psql -v ON_ERROR_STOP=1 -c "SELECT session_user;" "$CONNECTION_URI"
+      #     # psql -v ON_ERROR_STOP=1 -c "RESET ROLE;" "$CONNECTION_URI"
+      #     # psql -v ON_ERROR_STOP=1 -c "SELECT * FROM pg_roles;" "$CONNECTION_URI"
+      #     # psql -v ON_ERROR_STOP=1 -c '\l' "$CONNECTION_URI"
+      #     # psql -v ON_ERROR_STOP=1 -c '\l+' "$CONNECTION_URI"
+      #     # psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
+      #     # PGPASSWORD=postgres dropuser -e -h localhost -U postgres postgres || echo "2dropuser custom failed"
+      #     # pg_ctl -D /usr/local/var/postgres start || echo "2pg_ctl failed"
+      #     # sudo -i -u postgres psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
 
 
 #  postgreService=$(brew services list | grep -oe "postgresql\S*")
