@@ -15,34 +15,34 @@ jobs:
       - run: |
           set +e
           set -x
-          launchctl list
-      - run: |
-          set +e
-          set -x
-          brew services info nginx
-          nginx -t
-          netstat -an | grep 80
-          # lsof -i :80
-          # brew services
-          echo "----------------------------"
-          cat /usr/local/etc/nginx/nginx.conf
-          echo "----------------------------"
-          echo "foo bar" > /usr/local/var/www/me.txt
-          brew services start nginx
-          sleep 2
-          brew services info nginx
-          ls -R /usr/local/var/www
-          curl -I http://localhost
-          curl -I http://localhost/me.txt
-          curl -r 0-3 http://localhost/me.txt
-          curl http://localhost/me.txt
-          sleep 5
-          sudo brew services start nginx
-          sleep 1
-          brew services info nginx
-          netstat -an
-          curl -I http://localhost
-          
+          nginx -v
+      # - run: |
+      #     set +e
+      #     set -x
+      #     brew services info nginx
+      #     nginx -t
+      #     netstat -an | grep 80
+      #     # lsof -i :80
+      #     # brew services
+      #     echo "----------------------------"
+      #     cat /usr/local/etc/nginx/nginx.conf
+      #     echo "----------------------------"
+      #     echo "foo bar" > /usr/local/var/www/me.txt
+      #     brew services start nginx
+      #     sleep 2
+      #     brew services info nginx
+      #     ls -R /usr/local/var/www
+      #     curl -I http://localhost
+      #     curl -I http://localhost/me.txt
+      #     curl -r 0-3 http://localhost/me.txt
+      #     curl http://localhost/me.txt
+      #     sleep 5
+      #     sudo brew services start nginx
+      #     sleep 1
+      #     brew services info nginx
+      #     netstat -an
+      #     curl -I http://localhost
+
       # - name: Checkout sources
       #   uses: actions/checkout@v3
 
@@ -96,7 +96,7 @@ jobs:
       #     psql -v ON_ERROR_STOP=1 -c "select version();" "$CONNECTION_URI"
       #     psql -v ON_ERROR_STOP=1 -c "select PostGIS_Version();" "$CONNECTION_URI"
 
-          
+
       #     # echo "CONNECTION_URI = $CONNECTION_URI" | base64
       #     # set -x
       #     # which pg_ctl || true
