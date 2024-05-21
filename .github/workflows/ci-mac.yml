@@ -12,37 +12,43 @@ jobs:
           - os: macos-13
           - os: macos-14  # M1 CPU
     steps:
+#      - run: |
+#          set +e
+#          set -x
+#          nginx -v
+#          true
       - run: |
           set +e
           set -x
-          nginx -v
-      # - run: |
-      #     set +e
-      #     set -x
-      #     brew services info nginx
-      #     nginx -t
-      #     netstat -an | grep 80
-      #     # lsof -i :80
-      #     # brew services
-      #     echo "----------------------------"
-      #     cat /usr/local/etc/nginx/nginx.conf
-      #     echo "----------------------------"
-      #     echo "foo bar" > /usr/local/var/www/me.txt
-      #     brew services start nginx
-      #     sleep 2
-      #     brew services info nginx
-      #     ls -R /usr/local/var/www
-      #     curl -I http://localhost
-      #     curl -I http://localhost/me.txt
-      #     curl -r 0-3 http://localhost/me.txt
-      #     curl http://localhost/me.txt
-      #     sleep 5
-      #     sudo brew services start nginx
-      #     sleep 1
-      #     brew services info nginx
-      #     netstat -an
-      #     curl -I http://localhost
-
+          brew install nginx
+          brew services
+          nginx -t
+          CONF_FILE=$(nginx -t 2>&1 | sed -n -e 's/.*configuration file \(.*\) test is successful.*/\1/p' | head -1)
+          echo "CONF_FILE = $CONF_FILE"
+          cat "$CONF_FILE"
+          
+          # remove filename from env CONF_FILE
+          CONF_DIR=$(dirname "$CONF_FILE")
+          ls -Rlh "$CONF_DIR"
+          
+          # ls -Rlh /usr/local/etc/nginx
+          # ls -Rlh /usr/local/var/www
+          # echo "foo bar" > /usr/local/var/www/me.txt
+          # brew services start nginx
+          # sleep 2
+          # brew services info nginx
+          # ls -R /usr/local/var/www
+          # curl -I http://localhost
+          # curl -I http://localhost/me.txt
+          # curl -r 0-3 http://localhost/me.txt
+          # curl http://localhost/me.txt
+          # sleep 5
+          # sudo brew services start nginx
+          # sleep 1
+          # brew services info nginx
+          # netstat -an
+          # curl -I http://localhost
+          true
       # - name: Checkout sources
       #   uses: actions/checkout@v3
 
@@ -50,33 +56,33 @@ jobs:
       #   uses: ikalnytskyi/action-setup-postgres@v3
       #   id: pg
 
-#      - run: |
-#          # postgresql://postgres:postgres@localhost:5432/postgres
-#          echo "CONNECTION_URI = $CONNECTION_URI" | base64
-#          # start postgresql
-#          brew services start postgresql
-#          psql -v ON_ERROR_STOP=1 -c "select version();" "$CONNECTION_URI"
-#          psql -v ON_ERROR_STOP=1 -c "SELECT current_user;" "$CONNECTION_URI"
-#          psql -v ON_ERROR_STOP=1 -c "SELECT session_user;" "$CONNECTION_URI"
-#          psql -v ON_ERROR_STOP=1 -c "RESET ROLE;" "$CONNECTION_URI"
-#          psql -v ON_ERROR_STOP=1 -c "SELECT * FROM pg_roles;" "$CONNECTION_URI"
-#          psql -v ON_ERROR_STOP=1 -c '\l' "$CONNECTION_URI"
-#          psql -v ON_ERROR_STOP=1 -c '\l+' "$CONNECTION_URI"
-#          psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
-#
-#          dropuser -e postgres || echo "1dropuser1 custom failed"
-#          PGPASSWORD=postgres dropuser -e -h localhost -U postgres postgres || echo "1dropuser custom failed"
-#
-#          pg_ctl -D /usr/local/var/postgres start || echo "1pg_ctl failed"
-#          createuser -s postgres || echo "1createuser failed"
-#          PGPASSWORD=postgres createuser -e -h localhost -U postgres -s postgres || echo "1ceateuser2 custom failed"
-#
-#          # sudo -i -u postgres psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
-#
-#          # psql -v ON_ERROR_STOP=1 -c "CREATE EXTENSION postgis;" "$CONNECTION_URI"
-#
-#        env:
-#          CONNECTION_URI: ${{ steps.pg.outputs.connection-uri }}
+      #      - run: |
+      #          # postgresql://postgres:postgres@localhost:5432/postgres
+      #          echo "CONNECTION_URI = $CONNECTION_URI" | base64
+      #          # start postgresql
+      #          brew services start postgresql
+      #          psql -v ON_ERROR_STOP=1 -c "select version();" "$CONNECTION_URI"
+      #          psql -v ON_ERROR_STOP=1 -c "SELECT current_user;" "$CONNECTION_URI"
+      #          psql -v ON_ERROR_STOP=1 -c "SELECT session_user;" "$CONNECTION_URI"
+      #          psql -v ON_ERROR_STOP=1 -c "RESET ROLE;" "$CONNECTION_URI"
+      #          psql -v ON_ERROR_STOP=1 -c "SELECT * FROM pg_roles;" "$CONNECTION_URI"
+      #          psql -v ON_ERROR_STOP=1 -c '\l' "$CONNECTION_URI"
+      #          psql -v ON_ERROR_STOP=1 -c '\l+' "$CONNECTION_URI"
+      #          psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
+      #
+      #          dropuser -e postgres || echo "1dropuser1 custom failed"
+      #          PGPASSWORD=postgres dropuser -e -h localhost -U postgres postgres || echo "1dropuser custom failed"
+      #
+      #          pg_ctl -D /usr/local/var/postgres start || echo "1pg_ctl failed"
+      #          createuser -s postgres || echo "1createuser failed"
+      #          PGPASSWORD=postgres createuser -e -h localhost -U postgres -s postgres || echo "1ceateuser2 custom failed"
+      #
+      #          # sudo -i -u postgres psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
+      #
+      #          # psql -v ON_ERROR_STOP=1 -c "CREATE EXTENSION postgis;" "$CONNECTION_URI"
+      #
+      #        env:
+      #          CONNECTION_URI: ${{ steps.pg.outputs.connection-uri }}
 
       # - run: |
       #     brew install postgis
@@ -116,7 +122,6 @@ jobs:
       #     # PGPASSWORD=postgres dropuser -e -h localhost -U postgres postgres || echo "2dropuser custom failed"
       #     # pg_ctl -D /usr/local/var/postgres start || echo "2pg_ctl failed"
       #     # sudo -i -u postgres psql -v ON_ERROR_STOP=1 -c 'show is_superuser;' "$CONNECTION_URI"
-
 
 #  postgreService=$(brew services list | grep -oe "postgresql\S*")
 #  brew services start $postgreService
