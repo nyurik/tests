@@ -15,6 +15,10 @@ jobs:
       - run: |
           set +e
           set -x
+          launchctl list
+      - run: |
+          set +e
+          set -x
           brew services info nginx
           nginx -t
           netstat -an | grep 80
