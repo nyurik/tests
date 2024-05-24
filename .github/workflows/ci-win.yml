@@ -24,7 +24,7 @@ jobs:
 
       - run: |
           echo "PWD=$PWD"
-          cygpath -u "${{ step.paths.outputs.PWD1 }}"
+          cygpath -u "${{ steps.paths.outputs.PWD1 }}"
         shell: bash
 
       - shell: pwsh
