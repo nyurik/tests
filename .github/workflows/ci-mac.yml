@@ -1,5 +1,6 @@
 name: CI-mac
-on: push
+on: workflow_dispatch
+#on: push
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -18,18 +19,19 @@ jobs:
 #          nginx -v
 #          true
       - run: |
-          set +e
-          set -x
-          brew install nginx
-          brew services
-          nginx -t
-          CONF_FILE=$(nginx -t 2>&1 | sed -n -e 's/.*configuration file \(.*\) test is successful.*/\1/p' | head -1)
-          echo "CONF_FILE = $CONF_FILE"
-          cat "$CONF_FILE"
+          echo "PWD=$PWD"
+          # set +e
+          # set -x
+          # brew install nginx
+          # brew services
+          # nginx -t
+          # CONF_FILE=$(nginx -t 2>&1 | sed -n -e 's/.*configuration file \(.*\) test is successful.*/\1/p' | head -1)
+          # echo "CONF_FILE = $CONF_FILE"
+          # cat "$CONF_FILE"
           
-          # remove filename from env CONF_FILE
-          CONF_DIR=$(dirname "$CONF_FILE")
-          ls -Rlh "$CONF_DIR"
+          ## remove filename from env CONF_FILE
+          #CONF_DIR=$(dirname "$CONF_FILE")
+          #ls -Rlh "$CONF_DIR"
           
           # ls -Rlh /usr/local/etc/nginx
           # ls -Rlh /usr/local/var/www
