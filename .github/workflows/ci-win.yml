@@ -23,8 +23,12 @@ jobs:
           Add-Content $env:GITHUB_OUTPUT "PWD2=$PWD2"
 
       - run: |
-          echo "PWD=$PWD"
+          echo "in bash..."
+          echo "PWD2=$PWD"
           cygpath -u "${{ steps.paths.outputs.PWD1 }}"
+          PWD_CONV=$(cygpath -u "${{ steps.paths.outputs.PWD1 }}")
+          echo "PWD_CONV=$PWD_CONV"
+          ls -alh $PWD_CONV
         shell: bash
 
       - shell: pwsh
