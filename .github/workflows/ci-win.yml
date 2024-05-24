@@ -8,7 +8,30 @@ jobs:
       CACHED_DOWNLOADS: downloads
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - shell: pwsh
+        id: paths
+        run: |
+          # get current path as absolute
+          $PWD1 = Get-Location
+          echo "PWD1=$PWD1"
+          Add-Content $env:GITHUB_OUTPUT "PWD1=$PWD1"
+          # get current path for unix
+          $PWD2 = Get-Location -PSProvider FileSystem
+          echo "PWD2=$PWD2"
+          Add-Content $env:GITHUB_OUTPUT "PWD2=$PWD2"
+
+      - run: |
+          echo "PWD=$PWD"
+          cygpath -u "${{ step.paths.outputs.PWD1 }}"
+        shell: bash
+
+      - shell: pwsh
+        run: |
+          # Convert windows path to unix style
+          $PWD3 = Convert-Path -Path $PWD
+          echo "PWD3=$PWD3"
 
       - name: bash
         run: |
